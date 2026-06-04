@@ -256,7 +256,7 @@ namespace GodotTools.Export
                 {
                     string ridArch = DetermineRuntimeIdentifierArch(arch);
                     string runtimeIdentifier = $"{ridOS}-{ridArch}";
-                    string projectDataDirName = $"Data";
+                    string projectDataDirName = $"bin/managed";
                     if (platform == OS.Platforms.MacOS)
                     {
                         projectDataDirName = Path.Combine("Contents", "Resources", projectDataDirName);
