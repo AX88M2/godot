@@ -43,7 +43,7 @@ class EditorPaths : public Object {
 	String cache_dir; // Editor cache (thumbnails, tmp generated files).
 	String temp_dir; // Editor temporary directory.
 	String project_data_dir; // Project-specific data (metadata, shader cache, etc.).
-	bool self_contained = false; // Self-contained means everything goes to `editor_data` dir.
+	bool self_contained = true; // Self-contained means everything goes to `editor_data` dir.
 	String self_contained_file; // Self-contained file with configuration.
 	String export_templates_folder = "export_templates";
 	String text_editor_themes_folder = "text_editor_themes";
