@@ -35,6 +35,8 @@
 #include "core/math/math_defs.h"
 #include "core/os/keyboard.h"
 #include "core/version_generated.gen.h"
+#include "core/object/callable_mp.h"
+#include "core/object/class_db.h"
 #include "editor/docks/filesystem_dock.h"
 #include "editor/docks/inspector_dock.h"
 #include "editor/editor_node.h"

@@ -31,12 +31,14 @@
 /drivers/sdl/                                 @godotengine/input
 
 ## Rendering
+/drivers/aftermath/                           @godotengine/rendering
 /drivers/d3d12/                               @godotengine/rendering
 /drivers/dummy/                               @godotengine/rendering
 /drivers/egl/                                 @godotengine/rendering
 /drivers/gles3/                               @godotengine/rendering
 /drivers/metal/                               @godotengine/rendering
 /drivers/spirv-reflect/                       @godotengine/rendering
+/drivers/streamline/                          @godotengine/rendering
 /drivers/vulkan/                              @godotengine/rendering
 
 ## OS
@@ -147,6 +149,8 @@
 /modules/meshoptimizer/                       @godotengine/rendering
 /modules/raycast/                             @godotengine/rendering
 /modules/vhacd/                               @godotengine/rendering
+/modules/visual_shader/                       @godotengine/shaders
+/modules/visual_shader/doc_classes/           @godotengine/shaders @godotengine/documentation
 /modules/xatlas_unwrap/                       @godotengine/rendering
 
 ## Scripting
@@ -252,7 +256,6 @@
 /scene/resources/shader*                      @godotengine/shaders
 /scene/resources/skeleton*                    @godotengine/animation
 /scene/resources/text_*                       @godotengine/gui-nodes
-/scene/resources/visual_shader*               @godotengine/shaders
 /scene/theme/                                 @godotengine/gui-nodes
 
 # Servers
