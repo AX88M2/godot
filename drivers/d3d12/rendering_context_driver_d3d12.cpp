@@ -32,7 +32,6 @@
 
 #include "core/config/engine.h"
 #include "core/config/project_settings.h"
-#include "core/os/os.h"
 #include "core/string/ustring.h"
 #include "core/templates/local_vector.h"
 #include "drivers/aftermath/aftermath.h"
@@ -361,15 +360,9 @@ void RenderingContextDriverD3D12::surface_destroy(SurfaceID p_surface) {
 }
 
 bool RenderingContextDriverD3D12::is_debug_utils_enabled() const {
-#ifdef DEV_ENABLED
+#ifdef PIX_ENABLED
 	return true;
 #else
-	if (Engine::get_singleton() && Engine::get_singleton()->is_gpu_markers_enabled()) {
-		return true;
-	}
-	if (OS::get_singleton() && OS::get_singleton()->is_stdout_verbose()) {
-		return true;
-	}
 	return false;
 #endif
 }

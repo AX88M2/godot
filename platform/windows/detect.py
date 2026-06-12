@@ -273,6 +273,17 @@ def get_opts():
             "Path to the PIX runtime distribution (optional for D3D12)",
             os.path.join(deps_folder, "pix"),
         ),
+        (
+            "streamline_sdk_path",
+            "Root of the extracted NVIDIA Streamline SDK (expects bin/x64 under this path on x86_64)",
+            os.path.join(deps_folder, "streamline_sdk"),
+        ),
+        BoolVariable(
+            "install_streamline_sdk",
+            "yes: download SDK if bin/x64 is missing, then copy DLLs into bin during build | no: never download or copy (you place DLLs next to the exe yourself)",
+            True,
+        ),
+
     ]
 
 
