@@ -30,8 +30,10 @@
 
 #include "shader_baker_export_plugin.h"
 
+#include "core/config/engine.h"
 #include "core/config/project_settings.h"
 #include "core/io/dir_access.h"
+#include "core/string/string_builder.h"
 #include "core/version.h"
 #include "editor/editor_node.h"
 #include "scene/3d/label_3d.h"
@@ -99,7 +101,7 @@ bool ShaderBakerExportPlugin::_begin_customize_resources(const Ref<EditorExportP
 	}
 
 	if (Engine::get_singleton()->is_generate_spirv_debug_info_enabled()) {
-		WARN_PRINT("Shader baker can't generate a compatible shader when run with --generate-spirv-debug-info. Restart the editor without this argument if you want to bake shaders.");
+		WARN_PRINT("Shader baker can't generate a compatible shader when run with --debug-shaders (or --generate-spirv-debug-info). Restart the editor without this argument if you want to bake shaders.");
 		return false;
 	}
 

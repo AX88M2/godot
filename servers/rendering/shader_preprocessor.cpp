@@ -29,7 +29,10 @@
 /**************************************************************************/
 
 #include "shader_preprocessor.h"
-#include "core/math/expression.h"
+
+#include "core/io/resource_loader.h"
+#include "core/os/os.h"
+#include "servers/rendering/shader_expression.h"
 
 const char32_t CURSOR = 0xFFFF;
 
@@ -491,7 +494,7 @@ void ShaderPreprocessor::process_elif(Tokenizer *p_tokenizer) {
 		return;
 	}
 
-	Expression expression;
+	ShaderExpression expression;
 	Vector<String> names;
 	error = expression.parse(body, names);
 	if (error != OK) {
@@ -612,7 +615,7 @@ void ShaderPreprocessor::process_if(Tokenizer *p_tokenizer) {
 		return;
 	}
 
-	Expression expression;
+	ShaderExpression expression;
 	Vector<String> names;
 	error = expression.parse(body, names);
 	if (error != OK) {
@@ -1251,6 +1254,10 @@ void ShaderPreprocessor::insert_builtin_define(String p_name, String p_value, St
 	p_state.defines[p_name] = define;
 }
 
+void ShaderPreprocessor::add_define(const String &p_name, const String &p_value) {
+	custom_defines.push_back({ p_name, p_value });
+}
+
 void ShaderPreprocessor::clear_state() {
 	if (state != nullptr) {
 		for (const RBMap<String, Define *>::Element *E = state->defines.front(); E; E = E->next()) {
@@ -1360,6 +1367,10 @@ Error ShaderPreprocessor::preprocess(const String &p_code, const String &p_filen
 		insert_builtin_define("RENDERER_COMPATIBILITY", _MKSTR(0), pp_state);
 		insert_builtin_define("RENDERER_MOBILE", _MKSTR(1), pp_state);
 		insert_builtin_define("RENDERER_FORWARD_PLUS", _MKSTR(2), pp_state);
+	}
+
+	for (const Pair<String, String> &def : custom_defines) {
+		insert_builtin_define(def.first, def.second, pp_state);
 	}
 
 	Error err = preprocess(&pp_state, p_code, r_result);
