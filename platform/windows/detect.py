@@ -542,6 +542,8 @@ def configure_msvc(env: "SConsEnvironment"):
             env.Append(LIBPATH=[env["mesa_libs"] + "/bin"])
         LIBS += ["libNIR.windows." + env["arch"] + prebuilt_lib_extra_suffix]
 
+    configure_streamline(env)
+
     if env["opengl3"]:
         env.AppendUnique(CPPDEFINES=["GLES3_ENABLED"])
         if env["angle"]:
@@ -979,6 +981,8 @@ def configure_mingw(env: "SConsEnvironment"):
         env.Append(LIBS=["libNIR.windows." + env["arch"]])
         env.Append(LIBS=["version"])  # Mesa dependency.
 
+    configure_streamline(env)
+
     if env["opengl3"]:
         env.Append(CPPDEFINES=["GLES3_ENABLED"])
         if env["angle"]:
@@ -1066,3 +1070,74 @@ def check_d3d12_installed(env, suffix):
             "Alternatively, disable this driver by compiling with `d3d12=no` explicitly."
         )
         sys.exit(255)
+
+def configure_streamline(env: "SConsEnvironment") -> None:
+    """Ensure the Streamline SDK exists (Windows x86_64; NVIDIA SDK layout uses bin/x64)."""
+    if env["platform"] != "windows" or not env["use_streamline"]:
+        return
+    if env.GetOption("help"):
+        return
+
+    script_rel = os.path.join("misc", "scripts", "install_streamline_sdk.py")
+    manual_install = (
+        f"From the Godot repo root run: python {script_rel}\n"
+        "(optional: pass --extract_to <folder> to match your streamline_sdk_path)"
+    )
+    sdk = os.path.normpath(os.path.expanduser(str(env.subst(env.get("streamline_sdk_path", "")))))
+    if sdk == "" or sdk == os.path.normpath("."):
+        print_warning(
+            "Streamline is enabled (`use_streamline=yes`) but `streamline_sdk_path` is empty.\n"
+            "Set `streamline_sdk_path` to the folder that contains `bin/x64`, or disable "
+            "Streamline with `use_streamline=no`.\n"
+            f"{manual_install}"
+        )
+        env["use_streamline"] = False
+        return
+    env["streamline_sdk_path"] = sdk
+
+    if env["arch"] != "x86_64":
+        print_warning(
+            "Streamline only ships Windows x64 binaries (`bin/x64`). "
+            f"This build targets `{env['arch']}`, so Streamline is disabled.\n"
+            "Use `arch=x86_64`, or turn Streamline off with `use_streamline=no`."
+        )
+        env["use_streamline"] = False
+        return
+
+    bin_path = os.path.join(sdk, "bin", "x64")
+
+    def _try_auto_install_streamline() -> bool:
+        repo_root = env.Dir("#").abspath
+        script = os.path.join(repo_root, script_rel)
+        if not os.path.isfile(script):
+            return False
+        print("Streamline: SDK not found — downloading and extracting (install_streamline_sdk=yes) ...")
+        r = subprocess.run(
+            [sys.executable, script, "--extract_to", sdk],
+            cwd=repo_root,
+            env=os.environ.copy(),
+        )
+        return r.returncode == 0
+
+    sdk_ready = os.path.isdir(sdk) and os.path.isdir(bin_path)
+    if not sdk_ready:
+        if env["install_streamline_sdk"]:
+            if not _try_auto_install_streamline() or not os.path.isdir(sdk) or not os.path.isdir(bin_path):
+                print_warning(
+                    "Streamline is enabled but the SDK is still missing after running the installer.\n"
+                    f"Expected folder: {bin_path}\n"
+                    "Check network access and disk space, fix `streamline_sdk_path`, or try manually:\n\t"
+                    f"python {script_rel}\n"
+                    "To disable Streamline for this build: `use_streamline=no`."
+                )
+                env["use_streamline"] = False
+        else:
+            print_warning(
+                "Streamline is enabled but no SDK found, and `install_streamline_sdk=no` "
+                "(the build will not download or copy SDK DLLs).\n"
+                f"Expected folder: {bin_path}\n"
+                "Either extract or install an SDK into `streamline_sdk_path`, enable "
+                "`install_streamline_sdk=yes`, or disable Streamline with `use_streamline=no`.\n"
+                f"{manual_install}"
+            )
+            env["use_streamline"] = False

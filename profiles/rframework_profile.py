@@ -1,1 +1,5 @@
 module_mono_enabled = "yes"
+module_text_server_fb_enabled = "yes"
+d3d12 = "yes"
+accesskit = "yes"
+angle = "yes"

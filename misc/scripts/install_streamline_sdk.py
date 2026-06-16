@@ -18,7 +18,7 @@ parser.add_argument(
     "--extract_to",
     default="",
     help="Directory to extract the SDK into (must match SCons `streamline_sdk_path`). "
-    "Default: <build_deps>/streamline_sdk. The official zip has `bin/x64` at its root.",
+         "Default: <build_deps>/streamline_sdk. The official zip has `bin/x64` at its root.",
 )
 args = parser.parse_args()
 
