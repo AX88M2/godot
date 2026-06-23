@@ -2112,7 +2112,7 @@ Error Main::setup(const char *execpath, int argc, char *argv[], bool p_second_ph
 		String exec_path = OS::get_singleton()->get_executable_path();
 		String exec_basename = exec_path.get_file().get_basename();
 
-		if (FileAccess::exists(old_cwd.path_join(exec_basename + ".pck"))) {
+		if (FileAccess::exists(old_cwd.path_join("Data.pck"))) {
 			error_msg += "\"" + exec_basename + ".pck\" was found in the current working directory. To be able to load a project from the CWD, use the `disable_path_overrides=no` SCons option when compiling Godot.\n";
 		} else if (FileAccess::exists(old_cwd.path_join("project.godot"))) {
 			error_msg += "\"project.godot\" was found in the current working directory. To be able to load a project from the CWD, use the `disable_path_overrides=no` SCons option when compiling Godot.\n";
