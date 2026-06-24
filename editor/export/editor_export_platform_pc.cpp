@@ -250,6 +250,11 @@ Error EditorExportPlatformPC::export_project_data(const Ref<EditorExportPreset> 
 					}
 				}
 			} else {
+
+				/*if (src_path.ends_with("createdump.exe")) {
+					err = da->copy(src_path, p_path.get_base_dir().path_join(src_path.get_file()));
+				}*/
+
 				err = da->copy(src_path, target_path);
 				if (err != OK) {
 					add_message(EXPORT_MESSAGE_ERROR, TTR("GDExtension"), vformat(TTR("Failed to copy shared object \"%s\"."), src_path));
